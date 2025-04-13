@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Factory {
+  id          Int           @id @default(autoincrement())
+  name        String
+  inspections Inspection[]
+}
+
+model Inspection {
+  id                Int                 @id @default(autoincrement())
+  factoryId         Int
+  factory           Factory             @relation(fields: [factoryId], references: [id])
+  inspectedAt       DateTime
+  barcodeNumber     String
+  respectivePerson  String
+  styleNumber       String
+  selectedQuantity  Int
+  failQuantity      Int
+  findings          InspectionFinding[]
+}
+
+model InspectionType {
+  id        Int                 @id @default(autoincrement())
+  name      String              @unique
+  findings  InspectionFinding[]
+}
+
+model InspectionFinding {
+  id                Int             @id @default(autoincrement())
+  inspectionId      Int
+  inspection        Inspection      @relation(fields: [inspectionId], references: [id])
+  inspectionTypeId  Int
+  inspectionType    InspectionType  @relation(fields: [inspectionTypeId], references: [id])
+  rating            Int
+}
