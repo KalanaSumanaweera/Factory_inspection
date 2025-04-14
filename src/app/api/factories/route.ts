@@ -1,8 +1,8 @@
-// src/app/api/factories/route.ts
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { supabase } from "../../../lib/supabase";
 
+// GET all factories
 export async function GET() {
   try {
     const { data, error } = await supabase
@@ -22,14 +22,18 @@ export async function GET() {
   }
 }
 
+// POST new factory
 export async function POST(request: Request) {
-  const { userId } = auth();
+  const authData = await auth(); // 🛠️ Fix: await this
+  const userId = authData.userId;
+
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const { name } = await request.json();
+
     if (!name || typeof name !== "string" || name.trim() === "") {
       return NextResponse.json({ error: "Factory name is required" }, { status: 400 });
     }

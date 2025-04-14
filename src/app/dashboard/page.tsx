@@ -63,16 +63,20 @@ export default function Dashboard() {
     fetchInspections();
   }, []);
 
-  const chartDataByFactory = inspections.reduce((acc, inspection) => {
-    const factoryName = inspection.factory.name;
-    const entry = acc.find((a) => a.name === factoryName);
-    if (entry) {
-      entry.count += 1;
-    } else {
-      acc.push({ name: factoryName, count: 1 });
-    }
-    return acc;
-  }, []);
+  const chartDataByFactory = inspections.reduce(
+    (acc: { name: string; count: number }[], inspection) => {
+      const factoryName = inspection.factory.name;
+      const entry = acc.find((a) => a.name === factoryName);
+      if (entry) {
+        entry.count += 1;
+      } else {
+        acc.push({ name: factoryName, count: 1 });
+      }
+      return acc;
+    },
+    []
+  );
+  
 
   const pieData = [
     {

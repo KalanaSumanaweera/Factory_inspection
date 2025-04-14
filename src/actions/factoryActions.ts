@@ -1,14 +1,15 @@
-// src/actions/factoryActions.ts
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
 import { supabase } from "../lib/supabase";
 
 export async function addFactory(formData: FormData) {
-//   const { userId } = auth();
-//   if (!userId) {
-//     throw new Error("User not authenticated");
-//   }
+  const authData = await auth(); // 🛠️ Fix here
+  const userId = authData.userId;
+
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
 
   const name = formData.get("name")?.toString();
 
